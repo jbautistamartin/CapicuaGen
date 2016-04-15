@@ -1,0 +1,28 @@
+PATH
+  remote: .
+  specs:
+    CapicuaGen (0.0.1)
+      activesupport (~> 2.3, >= 2.3.18)
+      nokogiri (~> 1.6, >= 1.6.7)
+      uuidtools (~> 2.1, >= 2.1.5)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (2.3.18)
+    mini_portile2 (2.0.0)
+    nokogiri (1.6.7.2-x86-mingw32)
+      mini_portile2 (~> 2.0.0.rc2)
+    rake (10.4.2)
+    uuidtools (2.1.5)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  CapicuaGen!
+  bundler (~> 1.11)
+  rake (~> 10.0)
+
+BUNDLED WITH
+   1.11.2
