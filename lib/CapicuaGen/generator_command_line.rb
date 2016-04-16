@@ -189,7 +189,7 @@ HELP
               options.clean   =false
               options.generate=false
               options.example =true
-              options.out='.'
+              options.out     ='.'
 
           end
 
