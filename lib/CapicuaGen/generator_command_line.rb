@@ -50,6 +50,7 @@ Comandos:
    clean             :     Limpia los archivos generados.
    cleanAndGenerate  :     Limpia los archivos generados y luego los vuelve a crear.
    example           :     Genera un ejemplo
+   template          :     Lista o permite reemplazar plantillas por defecto.
 
 
 Ejecute 'opt.rb COMMAND --help' para obtener mas
@@ -149,7 +150,7 @@ HELP
             opts.separator ""
 
             # List of arguments.
-            opts.on("-o", "--out directorio", "") do |directorio|
+            opts.on("-o", "--out directorio", "Directorio de salida") do |directorio|
               options.out = directorio
             end
 
@@ -160,8 +161,49 @@ HELP
             end
 
             opts.separator ""
-          end
+          end,
 
+
+          'template'         => OptionParser.new do |opts|
+            opts.banner = "Uso: template [options]"
+            opts.separator ""
+            opts.separator "Opciones:"
+            opts.separator ""
+
+
+            # List of arguments.
+            opts.on("-l", "--list", "Lista los templates instalados") do
+              options.template_list = true
+            end
+
+            # Gema instalada
+            opts.on("-g", "--gem gema", "Gema (instalada) a obtener") do |template_gem|
+              options.template_gem = templates_gem
+            end
+
+            # Tipo de caracteristica
+            opts.on("-t", "--type tipo", "Tipos de carecteristica") do |type|
+              options.template_type = type
+            end
+
+            # Tipo de caracteristica
+            opts.on("-f", "--feature caracteristica", "Carecteristica") do |feature|
+              options.template_feature = feature
+            end
+
+            # List of arguments.
+            opts.on("-o", "--out directorio", "") do |directorio|
+              options.template_out = directorio
+            end
+
+            opts.on_tail("-h", "--help", "Muestra este mensaje") do
+              puts opts
+              options.help=true
+              options.exit=true
+            end
+
+            opts.separator ""
+          end
       }
 
 
@@ -191,6 +233,11 @@ HELP
               options.example =true
               options.out     ='.'
 
+            when 'template'
+              options.clean    =false
+              options.generate =false
+              options.template=true
+              options.template_out      ='capicua'
           end
 
           subcommands[command].order! internal_args

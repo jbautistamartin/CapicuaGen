@@ -147,12 +147,13 @@ module CapicuaGen
 
     def configure_template_directories
       # Configuro las rutas de los templates
-      self.template_directories << get_template_local_dir(get_class_file)
+      template_local_dir = get_template_local_dir(get_class_file)
+      self.template_directories << template_local_dir if template_local_dir
       self.template_directories << File.join(File.dirname(get_class_file), '../template')
 
     end
 
-	# Configura los objetivos de las platillas (despues de establecer el generador)
+    # Configura los objetivos de las platillas (despues de establecer el generador)
     def configure_template_targets
 
     end
@@ -216,6 +217,9 @@ module CapicuaGen
 
         exists= File.exist?(out_file)
 
+        # Creo el directorio
+        FileUtils::mkdir_p File.dirname(out_file)
+
         FileUtils.cp template_file, out_file
 
         if exists
@@ -227,7 +231,7 @@ module CapicuaGen
 
       else
         # Creo la salida
-        return TemplateHelper.generate_template(template_file, current_binding, :out_file => out_file, :feature => self, :force => argv_options.force)
+        return TemplateHelper.generate_template(template_file, current_binding, :out_file => out_file, :feature => self, :force => @generator.argv_options.force)
       end
 
 
@@ -289,10 +293,19 @@ module CapicuaGen
     protected
     # Directorio local para obtener los templates
     def get_template_local_dir(file)
-      feacture_directory= File.dirname(file).split('/')
-      feacture_name     = feacture_directory[feacture_directory.count-2]
-      package_name      = feacture_directory[feacture_directory.count-3]
-      return File.join(@generator.local_feature_directory, package_name, feacture_name, 'Template')
+      begin
+        feacture_directory= File.dirname(file).split('/')
+        feacture_name     = feacture_directory[feacture_directory.count-2]
+        package_name      = feacture_directory[feacture_directory.count-3]
+        gem_name          = feacture_directory[feacture_directory.count-4]
+        template_local    = File.join(@generator.local_templates, gem_name, package_name, feacture_name)
+
+        return template_local
+
+      rescue
+        #Seguramente no sigue la estructura indicada para templates
+        return nil
+      end
     end
 
 

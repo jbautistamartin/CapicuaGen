@@ -41,7 +41,7 @@ module CapicuaGen
       self.types= [:example] if self.types.blank?
 
       # Configuro los templates
-      set_template('generator', Template.new(:file => 'example.erb'))
+      set_template('generator', Template.new(:file => 'generator.erb'))
       set_template('GemFile', Template.new(:file => 'GemFile.erb'))
       set_template('instnwnd', Template.new(:file => 'instnwnd.erb'))
 
@@ -52,7 +52,7 @@ module CapicuaGen
     def configure_template_targets
 
       # Configuro los templates
-      set_template_target('generator', TemplateTarget.new(:out_file => "generator.cs", :types => :example, :copy_only => true))
+      set_template_target('generator', TemplateTarget.new(:out_file => "generator.rb", :types => :example, :copy_only => true))
       set_template_target('GemFile', TemplateTarget.new(:out_file => "GemFile", :types => :proyect_file, :copy_only => true))
       set_template_target('instnwnd', TemplateTarget.new(:out_file => "scripts/instnwnd.sql", :types => :proyect_file, :copy_only => true))
 

@@ -22,6 +22,7 @@ Para más información consultar http://www.gnu.org/licenses/lgpl.html
 require 'active_support/core_ext/object/blank'
 require_relative 'Mixins/reflection_mixin'
 require_relative 'generator_command_line'
+require_relative '../CapicuaGen/Examples/Example/Source/example_feature'
 
 module CapicuaGen
 
@@ -34,7 +35,7 @@ module CapicuaGen
 
     public
 
-    attr_accessor :generation_attributes, :retry_failed, :continue_on_failed, :retries, :local_feature_directory
+    attr_accessor :generation_attributes, :retry_failed, :continue_on_failed, :retries, :local_templates
     attr_accessor :message_helper, :start_time, :end_time, :argv_options
 
     # Inicializo el objeto
@@ -43,29 +44,29 @@ module CapicuaGen
 
 
       # Valores determinados
-      @retry_failed             = true unless @retry_failed
-      @retries                  = 1 unless @retries
-      @continue_on_failed       = true unless @continue_on_failed
-      @local_feactures_directory= 'Capicua' unless @local_features_directory
+      @retry_failed          = true unless @retry_failed
+      @retries               = 1 unless @retries
+      @continue_on_failed    = true unless @continue_on_failed
+      @local_templates       = 'Capicua' unless @local_templates
 
       # Colecciones de caracteristicas que posee el generador
-      @features                 = []
+      @features              = []
 
       # Caraceristicas a ejecutar
-      @targets                  = []
+      @targets               = []
 
       # Atributos generales de generacion
-      @generation_attributes    = AttributeMixer.new
+      @generation_attributes = AttributeMixer.new
 
       # Configuro el gestor de mensajes
-      @message_helper           = MessageHelper.new
+      @message_helper        = MessageHelper.new
 
       # Hora de comienzo y final
-      @start_time               = Time.now
-      @end_time                 = Time.now
+      @start_time            = Time.now
+      @end_time              = Time.now
 
       # Opciones
-      @argv_options             =OpenStruct.new
+      @argv_options          =OpenStruct.new
 
       # Aranco configuracion si es necesario
       yield self if block_given?
@@ -167,21 +168,31 @@ module CapicuaGen
     end
 
     # Genera todos las caracteristicas
-    def generate
+    def generate(values={})
 
-      @start_time   = Time.now
+      no_arguments=values[:no_arguments]
+
+
+      start_time = Time.now
 
       # Reviso argumentos
-      argv          =ARGV.clone
-      @argv_options =parse_command_line(argv)
 
-      return if @argv_options.exit
+      unless no_arguments
+        argv         =ARGV.clone
+        @argv_options =parse_command_line(argv)
 
-      if @argv_options.clean
-        clean
+        return if @argv_options .exit
+
+        clean if @argv_options .clean
+
+        generate_example @argv_options  if @argv_options .example
+
+        generate_list if @argv_options .template_list
+
+        generate_export_template @argv_options  if @argv_options .template and not @argv_options .template_list
+
+        return unless @argv_options.generate
       end
-
-      return unless @argv_options.generate
 
       @targets.each do |t|
 
@@ -196,6 +207,13 @@ module CapicuaGen
       targets= [] + @targets
       retries= @retries + 1
 
+      # Veo si debo hacer algo, si no muestro la ayuda
+      if targets.blank?
+        parse_command_line(["-h"])
+        return
+      end
+
+
       # Posibles reintentos
       retries.times do
 
@@ -208,7 +226,7 @@ module CapicuaGen
 
           feature= get_feature_by_name(t.feature_name)
 
-          next if @argv_options.ignore_features.include? feature.name
+          next if @argv_options  and @argv_options .ignore_features.include? feature.name
 
           begin
             feature.generate
@@ -221,10 +239,10 @@ module CapicuaGen
 
       end
 
-      @end_time=Time.now
+      end_time=Time.now
 
       puts
-      message_helper.puts_end_generate(@start_time, @end_time)
+      message_helper.puts_end_generate(start_time, end_time)
 
     end
 
@@ -283,6 +301,88 @@ module CapicuaGen
       puts
       message_helper.puts_end_generate(@start_time, @end_time)
 
+    end
+
+
+    def generate_example(options)
+      generator_example = CapicuaGen::Generator.new do |g|
+
+        # Creo las caracteristicas necesarias
+        feature_example = CapicuaGen::ExampleFeature.new(:name => 'feature_example')
+
+        # Agrego las caracteristica en al generador
+        g.add_feature_and_target feature_example
+
+        # Configuro los atributos
+        g.generation_attributes.add :out_dir => options.out
+        g.local_feature_directory = File.join(g.generation_attributes[:out_dir], "Capicua")
+      end
+
+      generator_example.generate :no_arguments => true
+
+    end
+
+    def generate_list
+      templates=[]
+      Dir['../../**/*'].select { |e| File.file? e and e=~/Template/ }.each do |f|
+        feature_template=get_gem_type_feature(f)
+
+        templates<<feature_template if feature_template
+      end
+
+      templates.uniq.each do |feature_template|
+        message_helper.puts_list_template(feature_template[:gem], feature_template[:type], feature_template[:feature]) if feature_template
+      end
+
+
+    end
+
+    def generate_export_template(options)
+      templates=[]
+      Dir['../../**/*'].select { |e| File.file? e and e=~/Template/ }.each do |template_file|
+
+
+        feature_template=get_gem_type_feature(template_file)
+
+        next unless feature_template
+
+        next unless feature_template[:gem]=~ /#{options.template_gem}/
+        next unless feature_template[:type]=~ /#{options.template_type}/
+        next unless feature_template[:feature]=~ /#{options.template_feature}/
+
+
+        out_file=File.join(options.template_out,  feature_template[:gem],feature_template[:type], feature_template[:feature], File.basename(template_file))
+
+        exists= File.exist?(out_file)
+
+        if not exists or options.force
+
+          # Creo el directorio
+          FileUtils::mkdir_p File.dirname(out_file)
+          FileUtils.cp template_file, out_file
+
+          if exists
+            message_helper.puts_copy_template(feature_template[:gem], feature_template[:type], feature_template[:feature], out_file, :override)
+          else
+            message_helper.puts_copy_template(feature_template[:gem], feature_template[:type], feature_template[:feature], out_file, :new)
+          end
+
+        else
+          message_helper.puts_copy_template(feature_template[:gem], feature_template[:type], feature_template[:feature], out_file, :ignore)
+        end
+
+
+
+
+      end
+    end
+
+    def get_gem_type_feature(file)
+      if file=~/([^\/*]+)(?:-.*?)?\/([^\/*]+)\/([^\/*]+)\/Template\//
+        return { :gem => $1, :type => $2, :feature => $3 }
+      else
+        return nil
+      end
     end
 
   end

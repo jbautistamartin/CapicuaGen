@@ -1,4 +1,3 @@
-
 =begin
 
 CapicuaGen
@@ -90,6 +89,28 @@ module CapicuaGen
 
     end
 
+    # Mesaje para template copiado
+    def puts_copy_template(gem, type, feature, out_file, mode)
+
+      result  = ''
+      template= "#{gem}, #{type}, #{feature}"
+      case mode
+        when :override
+          result= "* #{template} -> '#{out_file}': Sobreescrito"
+        when :new
+          result= "+ #{template} -> '#{out_file}': Creado"
+        when :ignore
+          result= "! #{template} -> '#{out_file}': NO creado"
+        when :delete
+          result= "- #{template} -> '#{out_file}': Eliminado"
+        else
+          result= "? #{template} -> '#{out_file}': #{mode.to_s}"
+      end
+
+      puts_message result
+
+    end
+
     # Mensaje gneracion acabada
     def puts_end_generate(start_time, end_time)
 
@@ -98,6 +119,10 @@ module CapicuaGen
       puts
     end
 
+    # Mesaje para plantilla creada
+    def puts_list_template(gem, file, feature)
+      puts_message "- gem: '#{gem}', file: '#{file}', feature: '#{feature}'"
+    end
 
   end
 

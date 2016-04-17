@@ -23,4 +23,6 @@ Para más información consultar http://www.gnu.org/licenses/lgpl.html
 
 require 'CapicuaGen/capicua_gen'
 
+generator=CapicuaGen::Generator.new
+generator.generate
 

@@ -1,0 +1,192 @@
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+
+require 'CapicuaGen/capicua_gen'
+require 'CapicuaGenMelchior/melchior'
+require 'CapicuaGenGaspar/gaspar'
+require 'CapicuaGenBalthazar/balthazar'
+
+
+#
+#  Configuraciones generales
+#
+script_directory            = File.join(File.dirname(__FILE__), 'scripts')
+script_northwind            = File.join(script_directory, 'instnwnd.sql')
+
+
+#
+# Generación de las caracteristicas comunes
+#
+feature_entity              = CapicuaGen::Melchior::EntitySqlDataAccessFeature.new(:name => 'feature_entity') do |f|
+f.add_sql_file script_northwind
+end
+feature_data_access         = CapicuaGen::Gaspar::CSSqlDataAccessFeature.new(:name => 'feature_data_access')
+feature_connection_provider = CapicuaGen::Gaspar::CSDBConnectionProviderFeature.new(:name => 'feature_connection_provider')
+feature_business_interface  = CapicuaGen::Gaspar::CSSqlEntityInterfaceFeature.new(:name => 'feature_business_interface')
+feature_header              = CapicuaGen::Gaspar::CSHeaderFooterFeature.new(:name => 'feature_header', :include_regex => [/\.(cs|java)$/i])
+feature_cleaner             = CapicuaGen::Gaspar::CodeMaidCleanerFeature.new(:name => 'feature_cleaner')
+
+
+#
+# Creacion de los generadores
+#
+
+generator_windows           = CapicuaGen::Generator.new do |g|
+
+# Creo las caracteristicas necesarias
+feature_proyect         = CapicuaGen::Gaspar::CSProyectWindowsFormFeature.new(:name => 'proyect')
+feature_business_entity = CapicuaGen::Gaspar::CSSqlEntityFeature.new(:name => 'feature_business_entity')
+feature_main_form       = CapicuaGen::Gaspar::CSMDIWindowsFormFeature.new(:name => 'feature_main_form')
+feature_splash_form     = CapicuaGen::Gaspar::CSSplashWindowsFeature.new(:name => 'feature_splash_form')
+feature_about_form      = CapicuaGen::Gaspar::CSAboutWindowsFormFeature.new(:name => 'feature_about_form')
+feature_catalog_form    = CapicuaGen::Gaspar::CSCatalogWindowsFormFeature.new(:name => 'feature_catalog_form')
+
+
+# Agrego las caracteristica en al generador
+g.add_feature_and_target feature_entity,
+feature_data_access,
+feature_main_form,
+feature_splash_form,
+feature_about_form,
+feature_catalog_form,
+feature_business_interface,
+feature_business_entity,
+feature_proyect,
+feature_connection_provider,
+feature_header,
+feature_cleaner
+
+
+g.generation_attributes.add :out_dir                           => "generated",
+:namespace                         => "Capicua.NorthWindWindowsExample",
+:assembly_title                    => 'Titulo del ejemplo',
+:assembly_description              => 'Descripción del ejemplo',
+:assembly_company                  => 'Compañia del ejemplo',
+:assembly_product                  => 'Producto del ejemplo',
+:assembly_copyright                => 'Copyright del ejemplo',
+:assembly_trademark                => 'Trademark del ejemplo',
+:assembly_culture                  => 'null',
+:assembly_version                  => '1.0.0.0',
+:assembly_file_version             => '1.0.0.0',
+:app_config_db_connection_name     => 'NorthwindConnectionString',
+:app_config_db_connection_string   => 'Data Source= localhost\sqlexpress;Initial Catalog= Northwind;Integrated Security= True',
+:app_config_db_connection_provider => 'System.Data.SqlClient'
+
+
+g.local_feature_directory = File.join(g.generation_attributes[:out_dir], "Capicua")
+
+
+end
+
+
+# Creo el generador
+
+generator_web               = CapicuaGen::Generator.new do |g|
+
+# Creo las caracteristicas necesarias
+feature_proyect_web     = CapicuaGen::Gaspar::CSProyectRESTFulFeature.new(:name => 'proyect_web')
+feature_business_entity = CapicuaGen::Gaspar::CSSqlEntityFeature.new(:name => 'feature_business_entity', :class_accessor => "public")
+feature_catalog_service = CapicuaGen::Gaspar::CSRESTFULCatalogFeature.new(:name => 'feature_catalog_service')
+
+# Agrego las caracteristica en al generador
+g.add_feature_and_target feature_entity,
+feature_data_access,
+feature_business_interface,
+feature_proyect_web,
+feature_catalog_service,
+feature_business_entity,
+feature_connection_provider,
+feature_header,
+feature_cleaner
+
+
+#Configuro los atributos del generador
+g.generation_attributes.add :out_dir                           => "generated",
+:namespace                         => "Capicua.NorthWindServiceExample",
+:assembly_title                    => 'Titulo del ejemplo',
+:assembly_description              => 'Descripción del ejemplo',
+:assembly_company                  => 'Compañia del ejemplo',
+:assembly_product                  => 'Producto del ejemplo',
+:assembly_copyright                => 'Copyright del ejemplo',
+:assembly_trademark                => 'Trademark del ejemplo',
+:assembly_culture                  => 'null',
+:assembly_version                  => '1.0.0.0',
+:assembly_file_version             => '1.0.0.0',
+:app_config_db_connection_name     => 'NorthwindConnectionString',
+:app_config_db_connection_string   => 'Data Source= localhost\sqlexpress;Initial Catalog= Northwind;Integrated Security= True',
+:app_config_db_connection_provider => 'System.Data.SqlClient',
+:local_url                         => "http://localhost/EjemploRESTFul"
+
+# Configuro la carpeta de las gemas locales
+g.local_feature_directory = File.join(generator_windows.generation_attributes[:out_dir], "Capicua")
+
+
+end
+
+
+# Creo el generador para android
+
+generator_android           = CapicuaGen::Generator.new do |g|
+
+# Generacion de caractertisticas
+feature_beans_entity    = CapicuaGen::Balthazar::AndySqlEntityFeature.new(:name => 'feature_beans_entity')
+feature_json            = CapicuaGen::Balthazar::AndyWebRequestFeature.new(:name => 'feature_json')
+feature_fragment        = CapicuaGen::Balthazar::AndyEntityCardViewFragmentFeature.new(:name => 'feature_fragment')
+feature_splash          = CapicuaGen::Balthazar::AndySplashActivityFeature.new(:name => 'feature_splash')
+feature_main            = CapicuaGen::Balthazar::AndyMainActivityFeature.new(:name => 'feature_main')
+feature_android_context = CapicuaGen::Balthazar::AndyContextProvider.new(:name => 'feature_android_context')
+feature_ic_launcher     = CapicuaGen::Balthazar::AndyIcLauncherFeature.new(:name => 'feature_ic_launcher')
+
+# Agrego las caracteristica en al generador
+g.add_feature_and_target feature_entity,
+feature_beans_entity,
+feature_json,
+feature_fragment,
+feature_splash,
+feature_main,
+feature_header,
+feature_android_context,
+feature_ic_launcher
+
+g.generation_attributes.add :out_dir         => "generated/NorthWindAndroidExample/app/src/main",
+:package         => "com.capicua.northWindAndroidExample",
+:web_timeout     => 60000,
+:remote_url      => 'http://192.168.1.15/EjemploRESTFul/Services/Catalogs.svc',
+:app_title       => 'Titulo del ejemplo',
+:app_description => 'Descripción del ejemplo',
+:app_copyright   => 'Copyright del ejemplo',
+:app_version     => '1.0.0.0'
+
+
+#generator_android.generation_attributes[:remote_url]= 'http://10.0.2.2/EjemploRESTFul/Services/Catalogs.svc'
+
+# Configuro la carpeta de las gemas locales
+g.local_feature_directory = File.join(generator_windows.generation_attributes[:out_dir], "Capicua")
+
+
+end
+
+#
+# Ejecuto los generadores
+#
+generator_windows.generate
+generator_web.generate
+generator_android.generate
