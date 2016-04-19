@@ -178,18 +178,18 @@ module CapicuaGen
       # Reviso argumentos
 
       unless no_arguments
-        argv         =ARGV.clone
+        argv          =ARGV.clone
         @argv_options =parse_command_line(argv)
 
-        return if @argv_options .exit
+        return if @argv_options.exit
 
-        clean if @argv_options .clean
+        clean if @argv_options.clean
 
-        generate_example @argv_options  if @argv_options .example
+        generate_example @argv_options if @argv_options.example
 
-        generate_list if @argv_options .template_list
+        generate_list if @argv_options.template_list
 
-        generate_export_template @argv_options  if @argv_options .template and not @argv_options .template_list
+        generate_export_template @argv_options if @argv_options.template and not @argv_options.template_list
 
         return unless @argv_options.generate
       end
@@ -226,14 +226,13 @@ module CapicuaGen
 
           feature= get_feature_by_name(t.feature_name)
 
-          next if @argv_options  and @argv_options .ignore_features.include? feature.name
+          next if @argv_options and @argv_options.ignore_features and @argv_options.ignore_features.include? feature.name
 
           begin
             feature.generate
             targets.delete(t)
           rescue => e
-            $stderr.puts e
-            $stderr.puts e.backtrace
+            message_helper.puts_catched_error e
           end
         end
 
@@ -289,8 +288,7 @@ module CapicuaGen
             feature.clean
             targets.delete(t)
           rescue => e
-            $stderr.puts e
-            $stderr.puts e.backtrace
+            message_helper.puts_catched_error e
           end
         end
 
@@ -315,7 +313,7 @@ module CapicuaGen
 
         # Configuro los atributos
         g.generation_attributes.add :out_dir => options.out
-        g.local_feature_directory = File.join(g.generation_attributes[:out_dir], "Capicua")
+
       end
 
       generator_example.generate :no_arguments => true
@@ -324,7 +322,10 @@ module CapicuaGen
 
     def generate_list
       templates=[]
-      Dir['../../**/*'].select { |e| File.file? e and e=~/Template/ }.each do |f|
+
+      dir = File.join(File.dirname(__FILE__), '../../..')
+
+      Dir["#{dir}/**/*"].select { |e| File.file? e and e=~/Template/ }.each do |f|
         feature_template=get_gem_type_feature(f)
 
         templates<<feature_template if feature_template
@@ -339,7 +340,10 @@ module CapicuaGen
 
     def generate_export_template(options)
       templates=[]
-      Dir['../../**/*'].select { |e| File.file? e and e=~/Template/ }.each do |template_file|
+
+      dir = File.join(File.dirname(__FILE__), '../../..')
+
+      Dir['#{dir}/**/*'].select { |e| File.file? e and e=~/Template/ }.each do |f|
 
 
         feature_template=get_gem_type_feature(template_file)
@@ -351,7 +355,7 @@ module CapicuaGen
         next unless feature_template[:feature]=~ /#{options.template_feature}/
 
 
-        out_file=File.join(options.template_out,  feature_template[:gem],feature_template[:type], feature_template[:feature], File.basename(template_file))
+        out_file=File.join(options.template_out, feature_template[:gem], feature_template[:type], feature_template[:feature], File.basename(template_file))
 
         exists= File.exist?(out_file)
 
@@ -370,8 +374,6 @@ module CapicuaGen
         else
           message_helper.puts_copy_template(feature_template[:gem], feature_template[:type], feature_template[:feature], out_file, :ignore)
         end
-
-
 
 
       end

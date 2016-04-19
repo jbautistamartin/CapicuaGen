@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    CapicuaGen (0.0.3)
+    CapicuaGen (0.0.4)
       activesupport (~> 2.3, >= 2.3.18)
+      colorize (~> 0.7.7)
       nokogiri (~> 1.6, >= 1.6.7)
       uuidtools (~> 2.1, >= 2.1.5)
 
@@ -10,6 +11,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     activesupport (2.3.18)
+    colorize (0.7.7)
     mini_portile2 (2.0.0)
     nokogiri (1.6.7.2-x86-mingw32)
       mini_portile2 (~> 2.0.0.rc2)

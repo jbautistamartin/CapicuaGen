@@ -86,6 +86,7 @@ HELP
             # List of arguments.
             opts.on("--ignore featurename1, featurename2, featurename2", Array, "Lista de caracteristicas que sera omitidas") do |ignore_features|
               options.ignore_features = ignore_features
+              options.ignore_features =[] unless options.ignore_features
             end
 
             opts.on("-f", "--force", "Fuerza que se sobreescriban las carateristicas generadas") do
@@ -234,10 +235,10 @@ HELP
               options.out     ='.'
 
             when 'template'
-              options.clean    =false
-              options.generate =false
-              options.template=true
-              options.template_out      ='capicua'
+              options.clean        =false
+              options.generate     =false
+              options.template     =true
+              options.template_out ='capicua'
           end
 
           subcommands[command].order! internal_args

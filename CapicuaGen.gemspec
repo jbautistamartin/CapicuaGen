@@ -53,5 +53,8 @@ Para más información consultar http://www.gnu.org/licenses/lgpl.html}
   spec.add_runtime_dependency 'activesupport', '>=2.3.18', '~>2.3'
   spec.add_runtime_dependency 'nokogiri', '>=1.6.7', '~>1.6'
   spec.add_runtime_dependency 'uuidtools', '>=2.1.5', '~>2.1'
+  spec.add_runtime_dependency 'colorize', '~> 0.7.7'
+
+  spec.required_ruby_version = '>= 2.0.0'
 
 end
