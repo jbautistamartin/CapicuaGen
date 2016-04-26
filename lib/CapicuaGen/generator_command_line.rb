@@ -145,14 +145,18 @@ HELP
 
 
           'example'          => OptionParser.new do |opts|
-            opts.banner = "Uso: cleanAndGenerate [options]"
+            opts.banner = "Uso: example [options]"
             opts.separator ""
             opts.separator "Opciones:"
             opts.separator ""
 
-            # List of arguments.
+           
             opts.on("-o", "--out directorio", "Directorio de salida") do |directorio|
               options.out = directorio
+            end
+
+            opts.on("-f", "--force", "Se sobreescribe el ejemplo") do
+              options.force= true
             end
 
             opts.on_tail("-h", "--help", "Muestra este mensaje") do

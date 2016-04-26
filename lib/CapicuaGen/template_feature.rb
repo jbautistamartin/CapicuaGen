@@ -220,14 +220,17 @@ module CapicuaGen
         # Creo el directorio
         FileUtils::mkdir_p File.dirname(out_file)
 
-        FileUtils.cp template_file, out_file
-
         if exists
-          message_helper.puts_created_template(File.basename(out_file), out_file, :override)
+          if @generator.argv_options.force
+            FileUtils.cp template_file, out_file
+            message_helper.puts_created_template(File.basename(out_file), out_file, :override)
+          else
+            message_helper.puts_created_template(File.basename(out_file), out_file, :ignore)
+          end
         else
+          FileUtils.cp template_file, out_file
           message_helper.puts_created_template(File.basename(out_file), out_file, :new)
         end
-
 
       else
         # Creo la salida

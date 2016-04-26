@@ -216,17 +216,18 @@ generator_android           = CapicuaGen::Generator.new do |g|
                            feature_android_context,
                            feature_ic_launcher
 
-  g.generation_attributes.add :out_dir         => File.join(OUT_DIR, "generated/NorthWindAndroidExample/app/src/main"),
+  g.generation_attributes.add :out_dir         => File.join(OUT_DIR, "NorthWindAndroidExample/app/src/main"),
                               :package         => "com.capicua.northWindAndroidExample",
                               :web_timeout     => 60000,
-                              :remote_url      => 'http://192.168.1.15/EjemploRESTFul/Services/Catalogs.svc',
+                              # 10.0.0.2 hace referencia a el host que esta corriendo el depurador de Android
+                              :remote_url      => 'http://10.0.2.2/EjemploRESTFul/Services/Catalogs.svc',
                               :app_title       => 'Titulo del ejemplo',
                               :app_description => 'Descripción del ejemplo',
                               :app_copyright   => 'Copyright del ejemplo',
                               :app_version     => '1.0.0.0'
 
-
-  g.generation_attributes[:remote_url]= 'http://10.0.2.2/EjemploRESTFul/Services/Catalogs.svc'
+  # Puedes comentar esta linea y configurar una IP en particular
+  # g.generation_attributes[:remote_url]= 'http://192.168.1.15/EjemploRESTFul/Services/Catalogs.svc'
 
 
 end

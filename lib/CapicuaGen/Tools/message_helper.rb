@@ -119,6 +119,25 @@ module CapicuaGen
       $stderr.puts e.backtrace.join($/).to_s.colorize(:red)
     end
 
+    # Indica que un archivo fue modificado
+    def puts_file_modified(out_file, mode)
+      case mode
+        when :override
+          result= "*".colorize(:yellow) + " -> '#{out_file}': Modificado"
+        when :new
+          result= "+".colorize(:blue) + " -> '#{out_file}': Creado"
+        when :ignore
+          result= "!".colorize(:red) + " -> '#{out_file}': NO modificado"
+        when :delete
+          result= "-".colorize(:magenta) + " -> '#{out_file}': Eliminado"
+        else
+          result= "?".colorize(:red) + " -> '#{out_file}': #{mode.to_s}"
+      end
+      puts_message result
+
+    end
+
+
   end
 
 

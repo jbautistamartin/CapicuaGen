@@ -171,21 +171,31 @@ module CapicuaGen
     def generate(values={})
 
       no_arguments=values[:no_arguments]
-
+      if values[:arguments]
+        arguments=Array(values[:arguments])
+      else
+        arguments=ARGV.clone
+      end
 
       start_time = Time.now
 
       # Reviso argumentos
 
       unless no_arguments
-        argv          =ARGV.clone
+        argv          =arguments.clone
         @argv_options =parse_command_line(argv)
 
         return if @argv_options.exit
 
-        clean if @argv_options.clean
+        if @argv_options.clean
+          clean
+          return
+        end
 
-        generate_example @argv_options if @argv_options.example
+        if @argv_options.example
+          generate_example
+          return
+        end
 
         generate_list if @argv_options.template_list
 
@@ -247,12 +257,16 @@ module CapicuaGen
 
 
     # Genera todos las caracteristicas
-    def clean
-
-      @start_time   = Time.now
+    def clean(values ={})
+      @start_time = Time.now
 
       # Reviso argumentos
-      argv          =ARGV.clone
+      if values[:arguments]
+        arguments=Array(values[:arguments])
+      else
+        arguments=ARGV.clone
+      end
+      argv          =arguments
       @argv_options =parse_command_line(argv)
 
       return if @argv_options.exit
@@ -302,7 +316,13 @@ module CapicuaGen
     end
 
 
-    def generate_example(options)
+    def generate_example()
+
+      arguments= ['generate']
+
+      argv_options =parse_command_line(ARGV)
+
+
       generator_example = CapicuaGen::Generator.new do |g|
 
         # Creo las caracteristicas necesarias
@@ -312,11 +332,14 @@ module CapicuaGen
         g.add_feature_and_target feature_example
 
         # Configuro los atributos
-        g.generation_attributes.add :out_dir => options.out
+        g.generation_attributes.add :out_dir => argv_options.out
 
       end
 
-      generator_example.generate :no_arguments => true
+
+      arguments << "--force" if argv_options.force
+
+      generator_example.generate :arguments => arguments
 
     end
 
