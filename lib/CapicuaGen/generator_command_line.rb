@@ -183,7 +183,7 @@ HELP
 
             # Gema instalada
             opts.on("-g", "--gem gema", "Gema (instalada) a obtener") do |template_gem|
-              options.template_gem = templates_gem
+              options.template_gem = template_gem
             end
 
             # Tipo de caracteristica

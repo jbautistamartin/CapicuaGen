@@ -109,7 +109,7 @@ module CapicuaGen
 
     # Mesaje para plantilla creada
     def puts_list_template(gem, file, feature)
-      puts_message "- gem:".colorize(:red) + " '#{gem}', " + "file:".colorize(:yellow) + "'#{file}', " + "feature:".colorize(:blue) + "'#{feature}'"
+      puts_message "- gem:".colorize(:red) + " '#{gem}', " + "type: ".colorize(:yellow) + "'#{file}', " + "feature: ".colorize(:blue) + "'#{feature}'"
     end
 
 

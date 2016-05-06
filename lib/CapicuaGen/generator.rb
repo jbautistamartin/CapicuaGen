@@ -189,7 +189,6 @@ module CapicuaGen
 
         if @argv_options.clean
           clean
-          return
         end
 
         if @argv_options.example
@@ -349,9 +348,10 @@ module CapicuaGen
       dir = File.join(File.dirname(__FILE__), '../../..')
 
       Dir["#{dir}/**/*"].select { |e| File.file? e and e=~/Template/ }.each do |f|
-        feature_template=get_gem_type_feature(f)
 
+        feature_template=get_gem_type_feature(f)
         templates<<feature_template if feature_template
+
       end
 
       templates.uniq.each do |feature_template|
@@ -366,7 +366,7 @@ module CapicuaGen
 
       dir = File.join(File.dirname(__FILE__), '../../..')
 
-      Dir['#{dir}/**/*'].select { |e| File.file? e and e=~/Template/ }.each do |f|
+      Dir["#{dir}/**/*"].select { |e| File.file? e and e=~/Template/ }.each do |template_file|
 
 
         feature_template=get_gem_type_feature(template_file)
@@ -403,7 +403,7 @@ module CapicuaGen
     end
 
     def get_gem_type_feature(file)
-      if file=~/([^\/*]+)(?:-.*?)?\/([^\/*]+)\/([^\/*]+)\/Template\//
+      if file=~/([^\/*]+)\/([^\/*?]+)\/([^\/*?]+)\/Template\//i
         return { :gem => $1, :type => $2, :feature => $3 }
       else
         return nil
