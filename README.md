@@ -1,36 +1,57 @@
 # CapicuaGen
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/CapicuaGen`. To experiment with that code, run `bin/console` for an interactive prompt.
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
 
-TODO: Delete this and the text above, and describe your gem
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
 
-## Installation
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
 
-Add this line to your application's Gemfile:
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+
+
+## Instalación
+
+Agrege la siguiente linea al archuivo GemFile de tu aplicación
 
 ```ruby
 gem 'CapicuaGen'
 ```
 
-And then execute:
+y ejecute:
 
     $ bundle
 
-Or install it yourself as:
+O instalela manualmente con el siguiente comando
 
     $ gem install CapicuaGen
 
-## Usage
+Para obtener un ambiente completamente funcionar de CapicuaGen, puede ejecutar el siguiente comando
 
-TODO: Write usage instructions here
+    $ gem install CapicuaGenEssential
 
-## Development
+## Uso
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+CapicuaGen  permite comenzar a trabajar con él desde el mismo momento en que es instalado. Para obtener un ejemplo funcional simplemente ejecutamos el comando CapicuaGen con el parámetro example:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+    $ capicuagen example
 
-## Contributing
+Se crearan los siguientes archivos:
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/CapicuaGen.
+* generator.rb: Ejemplo de un generador de codigo
+* GemFile: Archivo de configuración de depencias para bundler .
+* instnwnd.sql: Ejemplo de base de datos NorthWind, para Microsoft SQL Server
+
+Revise el archivo generator.rb para tener una introducción a CapicuaGen.
+
+## Contribuir
+
+Reporte de fallos y solicitudes de pull son bien recibidas en https://github.com/jbautistamartin/CapicuaGen
 
