@@ -1,3 +1,6 @@
+#encoding: UTF-8
+Encoding.default_external = Encoding.find('UTF-8')
+
 =begin
 
 CapicuaGen
@@ -6,12 +9,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -39,17 +42,17 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-Este es un emeplo generado automáticamente para comprender el uso
-de capicua,  incluye el uso de generadores de los siguientes tipos:
+Este es un ejemplo generado automáticamente para comprender el uso
+de CapicuaGen, incluye el uso de generadores de los siguientes tipos:
 
-CapicuaGenEssential agrega referencia a los generadores de caracteristicas
+CapicuaGenEssential agrega referencia a los generadores de características
 
 *	Melchior: Analizador de script SQL.
-*	Gaspar: Generador de codigo en C#
-*	Balthazar: Generador de codigo en Android
+*	Gaspar: Generador de código en C#
+*	Balthazar: Generador de código en Android
 
-¿Quieres ver el codigo para generar tus propiedas caracteristicas? Revisa
-los siguientes repositorios
+¿Quieres ver el código para generar tus propiedas características? Revisa
+los siguientes repositorios:
 
 }.colorize(:blue)
 
@@ -60,9 +63,9 @@ puts 'CapicuaGenBalthazar -> https://github.com/jbautistamartin/CapicuaGenBaltha
 puts
 
 puts %q{
-Se incluye deshabilitada la caracteristica de formatear apropiadamente codigo fuente C#,
-la caracteristica es 'CodeMaidCleanerFeature', que aunque muy interesante, es MUY
-lenta. Puede activar esta caracteristica cambiando en el codigo de este archivo:
+Se incluye deshabilitada la característica de formatear apropiadamente código fuente C#,
+la característica es 'CodeMaidCleanerFeature', que aunque muy interesante, es MUY
+lenta. Puede activarse esta característica cambiando el código de este archivo:
 }.colorize(:blue)
 
 
@@ -71,11 +74,11 @@ puts "ENABLE_CODE_MAID_FEATURE = true".colorize(:yellow)
 puts
 
 puts %q{
-Pulse enter para continuar
+Pulse enter para continuar.
 }.colorize(:green)
 
 STDIN.gets.chomp
-puts "Comenzando generacion...".colorize(:yellow)
+puts "Comenzando generación...".colorize(:yellow)
 puts
 
 
@@ -87,7 +90,7 @@ script_northwind            = File.join(script_directory, 'instnwnd.sql')
 
 
 #
-# Generación de las caracteristicas comunes
+# Generación de las características comunes
 #
 feature_entity              = CapicuaGen::Melchior::EntitySqlDataAccessFeature.new(:name => 'feature_entity') do |f|
   f.add_sql_file script_northwind
@@ -105,7 +108,7 @@ feature_cleaner             = CapicuaGen::Gaspar::CodeMaidCleanerFeature.new(:na
 
 generator_windows           = CapicuaGen::Generator.new do |g|
 
-  # Creo las caracteristicas necesarias
+  # Creo las características necesarias
   feature_proyect         = CapicuaGen::Gaspar::CSProyectWindowsFormFeature.new(:name => 'proyect')
   feature_business_entity = CapicuaGen::Gaspar::CSSqlEntityFeature.new(:name => 'feature_business_entity')
   feature_main_form       = CapicuaGen::Gaspar::CSMDIWindowsFormFeature.new(:name => 'feature_main_form')
@@ -114,7 +117,7 @@ generator_windows           = CapicuaGen::Generator.new do |g|
   feature_catalog_form    = CapicuaGen::Gaspar::CSCatalogWindowsFormFeature.new(:name => 'feature_catalog_form')
 
 
-  # Agrego las caracteristica en al generador
+  # Agrego las característica al generador
   g.add_feature_and_target feature_entity,
                            feature_data_access,
                            feature_main_form,
@@ -127,13 +130,13 @@ generator_windows           = CapicuaGen::Generator.new do |g|
                            feature_connection_provider,
                            feature_header
 
-  # Agrego la parte el limpieador de codigo
+  # Agrego la parte el limpieador de código
   g.add_feature_and_target feature_cleaner if ENABLE_CODE_MAID_FEATURE
 
 
   g.generation_attributes.add :out_dir                           => OUT_DIR,
                               :namespace                         => "Capicua.NorthWindWindowsExample",
-                              :assembly_title                    => 'Titulo del ejemplo',
+                              :assembly_title                    => 'Título del ejemplo',
                               :assembly_description              => 'Descripción del ejemplo',
                               :assembly_company                  => 'Compañia del ejemplo',
                               :assembly_product                  => 'Producto del ejemplo',
@@ -153,12 +156,12 @@ end
 
 generator_web               = CapicuaGen::Generator.new do |g|
 
-  # Creo las caracteristicas necesarias
+  # Creo las características necesarias
   feature_proyect_web     = CapicuaGen::Gaspar::CSProyectRESTFulFeature.new(:name => 'proyect_web')
   feature_business_entity = CapicuaGen::Gaspar::CSSqlEntityFeature.new(:name => 'feature_business_entity', :class_accessor => "public")
   feature_catalog_service = CapicuaGen::Gaspar::CSRESTFULCatalogFeature.new(:name => 'feature_catalog_service')
 
-  # Agrego las caracteristica en al generador
+  # Agrego las característica al generador
   g.add_feature_and_target feature_entity,
                            feature_data_access,
                            feature_business_interface,
@@ -168,14 +171,14 @@ generator_web               = CapicuaGen::Generator.new do |g|
                            feature_connection_provider,
                            feature_header
 
-  # Agrego la parte el limpieador de codigo
+  # Agrego la parte el limpieador de código
   g.add_feature_and_target feature_cleaner if ENABLE_CODE_MAID_FEATURE
 
 
   #Configuro los atributos del generador
   g.generation_attributes.add :out_dir                           => OUT_DIR,
                               :namespace                         => "Capicua.NorthWindServiceExample",
-                              :assembly_title                    => 'Titulo del ejemplo',
+                              :assembly_title                    => 'Título del ejemplo',
                               :assembly_description              => 'Descripción del ejemplo',
                               :assembly_company                  => 'Compañia del ejemplo',
                               :assembly_product                  => 'Producto del ejemplo',
@@ -196,7 +199,7 @@ end
 
 generator_android           = CapicuaGen::Generator.new do |g|
 
-  # Generacion de caractertisticas
+  # Generación de caractertisticas
   feature_beans_entity    = CapicuaGen::Balthazar::AndySqlEntityFeature.new(:name => 'feature_beans_entity')
   feature_json            = CapicuaGen::Balthazar::AndyWebRequestFeature.new(:name => 'feature_json')
   feature_fragment        = CapicuaGen::Balthazar::AndyEntityCardViewFragmentFeature.new(:name => 'feature_fragment')
@@ -205,7 +208,7 @@ generator_android           = CapicuaGen::Generator.new do |g|
   feature_android_context = CapicuaGen::Balthazar::AndyContextProvider.new(:name => 'feature_android_context')
   feature_ic_launcher     = CapicuaGen::Balthazar::AndyIcLauncherFeature.new(:name => 'feature_ic_launcher')
 
-  # Agrego las caracteristica en al generador
+  # Agrego las característica al generador
   g.add_feature_and_target feature_entity,
                            feature_beans_entity,
                            feature_json,
@@ -221,7 +224,7 @@ generator_android           = CapicuaGen::Generator.new do |g|
                               :web_timeout     => 60000,
                               # 10.0.0.2 hace referencia a el host que esta corriendo el depurador de Android
                               :remote_url      => 'http://10.0.2.2/EjemploRESTFul/Services/Catalogs.svc',
-                              :app_title       => 'Titulo del ejemplo',
+                              :app_title       => 'Título del ejemplo',
                               :app_description => 'Descripción del ejemplo',
                               :app_copyright   => 'Copyright del ejemplo',
                               :app_version     => '1.0.0.0'

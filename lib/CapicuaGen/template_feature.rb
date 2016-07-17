@@ -6,12 +6,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -23,7 +23,7 @@ require_relative 'feature'
 
 module CapicuaGen
 
-  # Es un tipo de caracteristica especial que se basa en generación de codigo a travez de plantillas
+  # Es un tipo de característica especial que se basa en generación de código a travez de plantillas
   class TemplateFeature < Feature
 
 
@@ -59,24 +59,24 @@ module CapicuaGen
     end
 
 
-    # Coleccion de caracteristicas del generador
+    # Coleccion de características del generador
     def templates
       return @templates
     end
 
-    # Agrega una caracteristica en el generador
+    # Agrega una característica en el generador
     def add_template(template)
       @templates<<template
     end
 
-    # Agrega una caracteristica en el generador
+    # Agrega una característica en el generador
     def set_template(name, template)
       remove_template_by_name(name)
       template.name= name
       @templates<<template
     end
 
-    # Quita la caracteristica
+    # Quita la característica
     def remove_template(template)
       @templates.delete(template)
     end
@@ -86,7 +86,7 @@ module CapicuaGen
       @templates.delete_if { |f| f.name==template_name }
     end
 
-    # Obtiene la caracteristica en base al nombre
+    # Obtiene la característica en base al nombre
     def get_template_by_name(template_name)
       return @templates.detect { |f| f.name==template_name }
     end
@@ -158,7 +158,7 @@ module CapicuaGen
 
     end
 
-    # Genero el codigo, usando todas las plantillas configuradas
+    # Genero el código, usando todas las plantillas configuradas
     def generate
       super()
 
@@ -166,7 +166,14 @@ module CapicuaGen
 
       # Genera una a una todas los objetivos de los templates
       self.template_targets.each do |t|
-        generate_template_target(t)
+        begin
+          generate_template_target(t)
+        rescue => e
+          error_message="Error en #{t.inspect}"
+          message_helper.puts_error_message error_message
+          message_helper.remove_indent
+          raise e
+        end
       end
 
       message_helper.remove_indent
@@ -265,7 +272,7 @@ module CapicuaGen
     end
 
 
-    # Devuelve los archivos generados por esta caracteristicas
+    # Devuelve los archivos generados por esta características
     def get_out_file_information(values= {})
 
       # Recupero los parametros

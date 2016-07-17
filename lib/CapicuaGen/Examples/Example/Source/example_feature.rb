@@ -6,12 +6,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -27,13 +27,13 @@ require_relative '../../../capicua_gen'
 
 module CapicuaGen
 
-  # Caracteristica generadora de una pantalla de Bienvenida
+  # Característica generadora de una pantalla de Bienvenida
   class ExampleFeature < CapicuaGen::TemplateFeature
     include CapicuaGen
 
     public
 
-    # Inicializa la caracteristica
+    # Inicializa la característica
     def initialize(values= {})
       super(values)
 

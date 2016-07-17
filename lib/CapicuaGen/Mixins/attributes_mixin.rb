@@ -5,12 +5,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -28,12 +28,12 @@ module CapicuaGen
 
   public
 
-  # Devuelve una coleccion atributos de unos terminadas caracteristicas de cierto tipo
+  # Devuelve una coleccion atributos de unos terminadas características de cierto tipo
   def get_attributes(values= {})
 
     # Atributos a generar
     attributes  = initialize_array_parameter(values[:attributes])
-    # Tipo de caracteristicas a buscar
+    # Tipo de características a buscar
     target_types= initialize_array_parameter(values[:target_types])
 
     # Agrego los atributes requeridos
@@ -43,7 +43,7 @@ module CapicuaGen
     end
 
 
-    # Busco  las caracteristicas que contiene entidades de SQL para una table
+    # Busco  las características que contiene entidades de SQL para una table
     generator.get_features_in_targets_by_type(target_types).each do |f|
 
       attributes.each do |a|

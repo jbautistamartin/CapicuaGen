@@ -6,12 +6,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -27,8 +27,8 @@ require_relative '../CapicuaGen/Examples/Example/Source/example_feature'
 module CapicuaGen
 
 
-  # Clase generadora, nueclo de CapicuaGen, al que se le configuran todas las caracteristicas
-  # y las llama segun corresponda para que generen la parte de codigo asociado a ellas
+  # Clase generadora, nueclo de CapicuaGen, al que se le configuran todas las características
+  # y las llama segun corresponda para que generen la parte de código asociado a ellas
 
   class Generator
     include CapicuaGen
@@ -49,13 +49,13 @@ module CapicuaGen
       @continue_on_failed    = true unless @continue_on_failed
       @local_templates       = 'Capicua' unless @local_templates
 
-      # Colecciones de caracteristicas que posee el generador
+      # Colecciones de características que posee el generador
       @features              = []
 
       # Caraceristicas a ejecutar
       @targets               = []
 
-      # Atributos generales de generacion
+      # Atributos generales de generación
       @generation_attributes = AttributeMixer.new
 
       # Configuro el gestor de mensajes
@@ -72,7 +72,7 @@ module CapicuaGen
       yield self if block_given?
     end
 
-    # Coleccion de caracteristicas del generador
+    # Coleccion de características del generador
     def features(values= {})
 
       # Configuro los parametros por defecto
@@ -86,12 +86,12 @@ module CapicuaGen
       return @features
     end
 
-    # Agrega una caracteristica en el generador
+    # Agrega una característica en el generador
     def add_feature (feature)
       @features<<feature
     end
 
-    # Quita la caracteristica
+    # Quita la característica
     def remove_feature (feature)
       @features.delete(feature)
     end
@@ -101,7 +101,7 @@ module CapicuaGen
       @features.delete_if { |f| f.name==feature_name }
     end
 
-    # Obtiene la caracteristica en base al nombre
+    # Obtiene la característica en base al nombre
     def get_feature_by_name(feature_name)
       return @features.detect { |f| f.name==feature_name }
     end
@@ -127,7 +127,7 @@ module CapicuaGen
     end
 
 
-    # Agrega una caracteristica y al mismo tiempo la convierte en objetivo
+    # Agrega una característica y al mismo tiempo la convierte en objetivo
     def add_feature_and_target(*features)
       features.each do |feature|
         add_feature(feature)
@@ -137,7 +137,7 @@ module CapicuaGen
     end
 
 
-    # Obtiene una caracteristica, que a la vez es un objetivo, por su nombre
+    # Obtiene una característica, que a la vez es un objetivo, por su nombre
     def get_feature_by_target_name
       target @targets.detect { |f| f.name==feature_name }
 
@@ -146,7 +146,7 @@ module CapicuaGen
       return get_feature_by_name(target.name)
     end
 
-    # Obtiene una caracteristica, que a la vez es un objetivo, por su tipo
+    # Obtiene una característica, que a la vez es un objetivo, por su tipo
     def get_features_in_targets_by_type(target_types= [])
       features= []
 
@@ -162,12 +162,12 @@ module CapicuaGen
     end
 
 
-    # Obtiene una caracteristica, que a la vez es un objetivo, por su tipo
+    # Obtiene una característica, que a la vez es un objetivo, por su tipo
     def get_features_in_targets
       return get_features_in_targets_by_type
     end
 
-    # Genera todos las caracteristicas
+    # Genera todos las características
     def generate(values={})
 
       no_arguments=values[:no_arguments]
@@ -241,6 +241,7 @@ module CapicuaGen
             feature.generate
             targets.delete(t)
           rescue => e
+            message_helper.puts_error_message "Error en característica '#{feature.name}' de tipo '#{feature.class}'"
             message_helper.puts_catched_error e
           end
         end
@@ -255,7 +256,7 @@ module CapicuaGen
     end
 
 
-    # Genera todos las caracteristicas
+    # Genera todos las características
     def clean(values ={})
       @start_time = Time.now
 
@@ -324,10 +325,10 @@ module CapicuaGen
 
       generator_example = CapicuaGen::Generator.new do |g|
 
-        # Creo las caracteristicas necesarias
+        # Creo las características necesarias
         feature_example = CapicuaGen::ExampleFeature.new(:name => 'feature_example')
 
-        # Agrego las caracteristica en al generador
+        # Agrego las característica al generador
         g.add_feature_and_target feature_example
 
         # Configuro los atributos
